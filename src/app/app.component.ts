@@ -17,8 +17,8 @@ export class AppComponent {
   getWledData() {
     this.wledService.getWledData().then(data => {
       this.WledData = data;
-      console.log('WledData');
-      console.log(this.WledData);
+      console.log('Wled State:');
+      console.log(data.state);
     });
   }
 

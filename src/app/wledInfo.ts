@@ -14,6 +14,7 @@ export interface WLEDInfo {
     live: boolean;
     fxcount: number;
     palcount: number;
+    ip: string;
     arch: string;
     core: string;
     freeheap: number;

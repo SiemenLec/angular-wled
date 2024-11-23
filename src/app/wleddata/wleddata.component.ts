@@ -4,11 +4,12 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { WLEDData } from '../wledData';
 import { WLEDInfo } from '../wledInfo';
 import { WLEDState } from '../wledState';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-wleddata',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './wleddata.component.html',
   styleUrl: './wleddata.component.css'
 })
@@ -20,24 +21,50 @@ export class WleddataComponent {
 
   constructor() {
     this.wledForm = new FormGroup({
-      stateControl: new FormControl(''),
-      infoControl: new FormControl(''),
-      effectsControl: new FormControl(''),
-      palettesControl: new FormControl('')
+      state: new FormGroup({
+        on: new FormControl(false),
+        bri: new FormControl(0),
+        transition: new FormControl(0),
+        ps: new FormControl(0),
+        pl: new FormControl(0),
+        nl: new FormGroup({
+          on: new FormControl(false),
+          dur: new FormControl(0),
+          fade: new FormControl(false),
+          tbri: new FormControl(0)
+        }),
+        udpn: new FormGroup({
+          send: new FormControl(false),
+          recv: new FormControl(false)
+        }),
+        seg: new FormControl([]) 
+      }),
+      effects: new FormControl([]),
+      palettes: new FormControl([])
     });
 
     this.getWledData();
   }
 
   getWledData() {
-    this.wledService.getWledData().then((data) => {
+    this.wledService.getWledData().then(data => {
       this.WledData = data;
+      console.log('Fetched WLED Data:', this.WledData);
       if (this.WledData) {
         this.wledForm.patchValue({
-          stateControl: this.WledData.state.on ? 'On' : 'Off',
-          infoControl: this.WledData.info || '',
-          effectsControl: this.WledData.effects || '',
-          palettesControl: this.WledData.palettes || ''
+          state: {
+            on: this.WledData.state.on,
+            bri: this.WledData.state.bri,
+            transition: this.WledData.state.transition,
+            ps: this.WledData.state.ps,
+            pl: this.WledData.state.pl,
+            nl: this.WledData.state.nl,
+            udpn: this.WledData.state.udpn,
+            seg: this.WledData.state.seg
+          },
+          info: this.WledData.info,
+          effects: this.WledData.effects,
+          palettes: this.WledData.palettes
         });
       }
     });

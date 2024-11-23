@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { WLEDData } from "./wledData"; 
+import { WLEDInfo } from "./wledInfo";
+import { WLEDState } from "./wledState";
 
 @Injectable({
   providedIn: 'root'
@@ -12,4 +14,11 @@ export class WledService {
       .then(response => response.json())
       .then(data => data as WLEDData); // Cast the data to WLEDData
   }
+
+    // setWledState(state: WLEDState): Promise<void> {
+    //     return fetch(`http://${this.baseUrl}/json/state`, {
+    //     method: 'POST',
+    //     body: JSON.stringify(state)
+    //     }).then(() => {});
+    // }
 }

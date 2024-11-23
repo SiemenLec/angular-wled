@@ -1,24 +1,29 @@
 import { Injectable } from "@angular/core";
 import { WLEDData } from "./wledData"; 
-import { WLEDInfo } from "./wledInfo";
-import { WLEDState } from "./wledState";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WledService {
-  readonly baseUrl = '192.168.0.105';
+  readonly baseUrl = 'http://192.168.0.174';
 
   getWledData(): Promise<WLEDData> {
-    return fetch(`http://${this.baseUrl}/json`)
+    return fetch(`${this.baseUrl}/json`)
       .then(response => response.json())
-      .then(data => data as WLEDData); // Cast the data to WLEDData
+      .then(data => data as WLEDData);
   }
 
-    // setWledState(state: WLEDState): Promise<void> {
-    //     return fetch(`http://${this.baseUrl}/json/state`, {
-    //     method: 'POST',
-    //     body: JSON.stringify(state)
-    //     }).then(() => {});
-    // }
+  setWledData(stateData: Partial<WLEDData['state']>): Promise<void> {
+    return fetch(`${this.baseUrl}/json/state`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(stateData)
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to set WLED state data');
+      }
+    });
+  }
 }

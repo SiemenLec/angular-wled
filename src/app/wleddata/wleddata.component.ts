@@ -1,9 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { WledService } from '../wled.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { WLEDData } from '../wledData';
-import { WLEDInfo } from '../wledInfo';
-import { WLEDState } from '../wledState';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,9 +9,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './wleddata.component.html',
-  styleUrl: './wleddata.component.css'
+  styleUrls: ['./wleddata.component.css']
 })
-export class WleddataComponent {
+export class WleddataComponent implements OnInit {
   title = 'wled-angular';
   wledService = inject(WledService);
   WledData: WLEDData | undefined;
@@ -37,19 +35,15 @@ export class WleddataComponent {
           send: new FormControl(false),
           recv: new FormControl(false)
         }),
-        seg: new FormControl([]) 
+        seg: new FormControl([])
       }),
-      effects: new FormControl([]),
-      palettes: new FormControl([])
+      selectedEffect: new FormControl(''),
+      selectedPalette: new FormControl('')
     });
   }
 
   ngOnInit() {
     this.getWledData();
-
-    this.wledForm.valueChanges.subscribe(() => {
-      this.onSubmit();
-    });
   }
 
   getWledData() {
@@ -68,15 +62,31 @@ export class WleddataComponent {
             udpn: this.WledData.state.udpn,
             seg: this.WledData.state.seg
           },
-          info: this.WledData.info,
-          effects: this.WledData.effects,
-          palettes: this.WledData.palettes
+          selectedEffect: this.WledData.effects[0] || '',
+          selectedPalette: this.WledData.palettes[0] || ''
         });
       }
     });
   }
 
   onSubmit() {
-    console.log('Form submitted:', this.wledForm.value);
+    const formValue = this.wledForm.value;
+    const effectIndex = this.WledData?.effects.indexOf(formValue.selectedEffect) ?? -1;
+    const paletteIndex = this.WledData?.palettes.indexOf(formValue.selectedPalette) ?? -1;
+
+    const stateData = {
+      ...formValue.state,
+      seg: formValue.state.seg.map((segment: any) => ({
+        ...segment,
+        fx: effectIndex,
+        pal: paletteIndex
+      }))
+    };
+
+    console.log('Submitting state data:', stateData);
+
+    this.wledService.setWledData(stateData).catch(error => {
+      console.error('Error updating WLED data:', error);
+    });
   }
 }

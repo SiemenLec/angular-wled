@@ -1,93 +1,79 @@
 <div class="wled-container">
-  <form [formGroup]="wledForm" (ngSubmit)="onSubmit()">
-    <!-- State Section -->
-    <h2>State</h2>
-    <div formGroupName="state">
-      <label>Power</label>
-      <input type="checkbox" formControlName="on" />
-
-      <label>Brightness</label>
-      <input type="number" formControlName="bri" />
-
-      <label>Transition</label>
-      <input type="number" formControlName="transition" />
-
-      <!-- Nightlight Subgroup -->
-      <div formGroupName="nl">
-        <h3>Nightlight</h3>
-        <label>Enabled</label>
+    <form [formGroup]="wledForm" (ngSubmit)="onSubmit()">
+      <h2>State</h2>
+      <div formGroupName="state">
+        <label>Power</label>
         <input type="checkbox" formControlName="on" />
-
-        <label>Duration</label>
-        <input type="number" formControlName="dur" />
-
-        <label>Fade</label>
-        <input type="checkbox" formControlName="fade" />
-
-        <label>Target Brightness</label>
-        <input type="number" formControlName="tbri" />
+  
+        <label>Brightness</label>
+        <input type="number" formControlName="bri" />
+  
+        <label>Transition</label>
+        <input type="number" formControlName="transition" />
+  
+        <!-- Nightlight Subgroup -->
+        <div formGroupName="nl">
+          <h3>Nightlight</h3>
+          <label>Enabled</label>
+          <input type="checkbox" formControlName="on" />
+          <label>Duration</label>
+          <input type="number" formControlName="dur" />
+          <label>Fade</label>
+          <input type="checkbox" formControlName="fade" />
+          <label>Target Brightness</label>
+          <input type="number" formControlName="tbri" />
+        </div>
+  
+        <!-- UDP Subgroup -->
+        <div formGroupName="udpn">
+          <h3>UDP</h3>
+          <label>Send</label>
+          <input type="checkbox" formControlName="send" />
+          <label>Receive</label>
+          <input type="checkbox" formControlName="recv" />
+        </div>
       </div>
-
-      <!-- UDP Subgroup -->
-      <div formGroupName="udpn">
-        <h3>UDP</h3>
-        <label>Send</label>
-        <input type="checkbox" formControlName="send" />
-
-        <label>Receive</label>
-        <input type="checkbox" formControlName="recv" />
+  
+      <h2>Effects and Palettes</h2>
+      <div class="form-group">
+        <label>Effects</label>
+        <select formControlName="selectedEffect">
+          <option *ngFor="let effect of WledData?.effects" [value]="effect">{{ effect }}</option>
+        </select>
       </div>
-    </div>
-
-    <!-- Effects and Palettes -->
-    <h2>Effects and Palettes</h2>
-    <div class="form-group">
-      <label>Effects</label>
-      <select formControlName="effects">
-        <option *ngFor="let effect of WledData?.effects" [value]="effect">
-          {{ effect }}
-        </option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Palettes</label>
-      <select formControlName="palettes">
-        <option *ngFor="let palette of WledData?.palettes" [value]="palette">
-          {{ palette }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Info Section -->
-
-    <h2>Info</h2>
-
-    <p>Architecture: {{ WledData?.info?.arch }}</p>
-    <p>Free Heap: {{ WledData?.info?.freeheap }}</p>
-    <p>Uptime: {{ WledData?.info?.uptime }}</p>
-    <p>IP Address: {{ WledData?.info?.ip }}</p>
-    <p>MAC Address: {{ WledData?.info?.mac }}</p>
-    <p>WLED Version: {{ WledData?.info?.ver }}</p>
-    <p>WLED Build: {{ WledData?.info?.vid }}</p>
-    <p>Name: {{ WledData?.info?.name }}</p>
-    <p>UDP Port: {{ WledData?.info?.udpport }}</p>
-    <p>Live: {{ WledData?.info?.live ? "Yes" : "No" }}</p>
-    <p>FX Count: {{ WledData?.info?.fxcount }}</p>
-    <p>Palette Count: {{ WledData?.info?.palcount }}</p>
-    <p>Core: {{ WledData?.info?.core }}</p>
-    <p>Brand: {{ WledData?.info?.brand }}</p>
-    <p>Product: {{ WledData?.info?.product }}</p>
-
-    <h3>LEDs</h3>
-    <p>LED Count: {{ WledData?.info?.leds?.count }}</p>
-    <p>RGBW: {{ WledData?.info?.leds?.rgbw ? "Yes" : "No" }}</p>
-    <p>Pin: {{ WledData?.info?.leds?.pin?.join(", ") }}</p>
-    <p>Power (mA): {{ WledData?.info?.leds?.pwr }}</p>
-    <p>Max Power (mA): {{ WledData?.info?.leds?.maxpwr }}</p>
-    <p>Max Segments: {{ WledData?.info?.leds?.maxseg }}</p>
-
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-</div>
+  
+      <div class="form-group">
+        <label>Palettes</label>
+        <select formControlName="selectedPalette">
+          <option *ngFor="let palette of WledData?.palettes" [value]="palette">{{ palette }}</option>
+        </select>
+      </div>
+  
+      <h2>Info</h2>
+      <div *ngIf="WledData?.info">
+        <p>Architecture: {{ WledData?.info?.arch }}</p>
+        <p>Free Heap: {{ WledData?.info?.freeheap }}</p>
+        <p>Uptime: {{ WledData?.info?.uptime }}</p>
+        <p>IP Address: {{ WledData?.info?.ip }}</p>
+        <p>MAC Address: {{ WledData?.info?.mac }}</p>
+        <p>WLED Version: {{ WledData?.info?.ver }}</p>
+        <p>WLED Build: {{ WledData?.info?.vid }}</p>
+        <p>Name: {{ WledData?.info?.name }}</p>
+        <p>UDP Port: {{ WledData?.info?.udpport }}</p>
+        <p>Live: {{ WledData?.info?.live ? "Yes" : "No" }}</p>
+        <p>FX Count: {{ WledData?.info?.fxcount }}</p>
+        <p>Palette Count: {{ WledData?.info?.palcount }}</p>
+        <p>Core: {{ WledData?.info?.core }}</p>
+        <p>Brand: {{ WledData?.info?.brand }}</p>
+        <p>Product: {{ WledData?.info?.product }}</p>
+        <h3>LEDs</h3>
+        <p>LED Count: {{ WledData?.info?.leds?.count }}</p>
+        <p>RGBW: {{ WledData?.info?.leds?.rgbw ? "Yes" : "No" }}</p>
+        <p>Power (mA): {{ WledData?.info?.leds?.pwr }}</p>
+        <p>Max Power (mA): {{ WledData?.info?.leds?.maxpwr }}</p>
+        <p>Max Segments: {{ WledData?.info?.leds?.maxseg }}</p>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>

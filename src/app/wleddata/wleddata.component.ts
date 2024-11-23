@@ -42,7 +42,9 @@ export class WleddataComponent {
       effects: new FormControl([]),
       palettes: new FormControl([])
     });
+  }
 
+  ngOnInit() {
     this.getWledData();
   }
 

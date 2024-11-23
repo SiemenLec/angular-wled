@@ -46,6 +46,10 @@ export class WleddataComponent {
 
   ngOnInit() {
     this.getWledData();
+
+    this.wledForm.valueChanges.subscribe(() => {
+      this.onSubmit();
+    });
   }
 
   getWledData() {

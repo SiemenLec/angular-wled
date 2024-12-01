@@ -1,19 +1,33 @@
 import { Injectable } from "@angular/core";
-import { WLEDData } from "./wledData"; 
+import { WLEDData } from "./wledData";
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WledService {
-  readonly baseUrl = 'http://192.168.0.174';
+  private baseUrl: string | null = null;
+
+  constructor(private storageService: StorageService) {
+    this.baseUrl = this.storageService.getBaseUrl();
+  }
 
   getWledData(): Promise<WLEDData> {
+    this.baseUrl = this.storageService.getBaseUrl();
+    if (!this.baseUrl) {
+      return Promise.reject('Base URL not configured. Please set it in the settings.');
+    }
+
     return fetch(`${this.baseUrl}/json`)
       .then(response => response.json())
       .then(data => data as WLEDData);
   }
 
   setWledData(stateData: Partial<WLEDData['state']>): Promise<void> {
+    if (!this.baseUrl) {
+      return Promise.reject('Base URL not configured. Please set it in the settings.');
+    }
+
     return fetch(`${this.baseUrl}/json/state`, {
       method: 'POST',
       headers: {

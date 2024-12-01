@@ -15,6 +15,7 @@ export class WledService {
   getWledData(): Promise<WLEDData> {
     this.baseUrl = this.storageService.getBaseUrl();
     if (!this.baseUrl) {
+      alert("Set a IP Adress of your WLED in the IPConfig Settings")
       return Promise.reject('Base URL not configured. Please set it in the settings.');
     }
 
@@ -25,6 +26,7 @@ export class WledService {
 
   setWledData(stateData: Partial<WLEDData['state']>): Promise<void> {
     if (!this.baseUrl) {
+      alert("Set a IP Adress of your WLED in the IPConfig Settings")
       return Promise.reject('Base URL not configured. Please set it in the settings.');
     }
 

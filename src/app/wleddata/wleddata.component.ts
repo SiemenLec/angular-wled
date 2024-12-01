@@ -49,7 +49,6 @@ export class WleddataComponent implements OnInit {
   getWledData() {
     this.wledService.getWledData().then(data => {
       this.WledData = data;
-      console.log('Fetched WLED Data:', this.WledData);
       if (this.WledData) {
         this.wledForm.patchValue({
           state: {
